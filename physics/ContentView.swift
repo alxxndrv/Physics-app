@@ -113,8 +113,14 @@ struct ContentView: View {
         }
     }
     var body: some View {
-        NavigationView {
             VStack {
+                HStack {
+                    Text("Физика")
+                        .font(.largeTitle)
+                        .bold()
+                    Spacer()
+                }.padding()
+                Spacer()
                 VStack(alignment: .leading) {
                     Text("Параметры снаряда").font(.title2).bold()
                         .padding(.bottom, 6)
@@ -174,8 +180,8 @@ struct ContentView: View {
                 }.padding()
                 .background(Color(UIColor.systemBackground).cornerRadius(16, antialiased: true).shadow(color: Color.black.opacity(0.1), radius: 16))
                 .padding()
+                Spacer()
             }.navigationTitle("Physics")
-        }
     }
 
     private func addItem() {
