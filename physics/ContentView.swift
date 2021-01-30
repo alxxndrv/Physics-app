@@ -137,8 +137,12 @@ struct ContentView: View {
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
                     Toggle(isOn: $air_resist.didSet { _ in
+                        withAnimation {
                         updateData()
+                        }
                     }, label: {Text("Учитывать сопротивление воздуха?")}).padding(.vertical, 5)
+                    if air_resist {
+                    Group {
                     TextField("Коэффициент k", text: $k.didSet { _ in
                         updateData()
                     })
@@ -151,6 +155,8 @@ struct ContentView: View {
                         .keyboardType(.decimalPad)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
+                    }.transition(.opacity)
+                }
                 }.padding()
                 .background(Color(UIColor.systemBackground).cornerRadius(16, antialiased: true).shadow(color: Color.black.opacity(0.1), radius: 16))
                 .padding()
