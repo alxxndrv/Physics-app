@@ -87,6 +87,23 @@ struct ContentView: View {
     @State var time = Double.zero
     @State var lenght = Double.zero
     @State var height = Double.zero
+    
+    @State var air_resist = false
+    
+    @State var k = Double.zero
+    @State var m = Double.zero
+    
+    func updateData() {
+        if !air_resist {
+            time = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).time
+            lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
+            height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
+        } else {
+            time = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).time
+            lenght = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).lenght
+            height = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).height
+        }
+    }
     var body: some View {
         NavigationView {
             VStack {
@@ -102,9 +119,7 @@ struct ContentView: View {
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
                     TextField("Угол между вектором начальной скорости и горизонтом в градусах", text: $angle.didSet { _ in
-                        time = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).time
-                        lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
-                        height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
+
                     })
                         .keyboardType(.decimalPad)
                         .padding()
