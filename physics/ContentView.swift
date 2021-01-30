@@ -24,6 +24,38 @@ extension Binding {
     }
 }
 
+func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Double) -> (time: Double, height: Double, lenght: Double) {
+    let g = 9.8
+    let angle = deg2rad(Double(angle))
+    let v_0y = velocity * sin(Double(angle))
+    let v_0x = velocity * cos(Double(angle))
+    
+    var t: Double = 0
+    var t_list = [Double]()
+    while (m/k)*((v_0y + m*g/k)*(1 - exp(-k*t/m)) - g*t) >= 0 {
+        t_list.append(t)
+        t += 0.001
+    }
+    
+    var x_list = [Double]()
+    for t in t_list {
+        let x = (v_0x*m/k)*(1 - exp(-k*t/m))
+        x_list.append(x)
+    }
+
+    var y_list = [Double]()
+    for t in t_list {
+        let y = (m/k)*((v_0y + m*g/k)*(1 - exp(-k*t/m)) - g*t)
+        y_list.append(y)
+    }
+    
+    let t_full = t_list[-1]
+    let height_max = y_list.max()!
+    let length_max = x_list[-1]
+    
+    return (abs(t_full), height_max, length_max)
+}
+
 
 func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, lenght: Double) {
     let g = 9.8
