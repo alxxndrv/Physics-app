@@ -111,15 +111,13 @@ struct ContentView: View {
                     Text("Параметры снаряда").font(.title2).bold()
                         .padding(.bottom, 6)
                     TextField("Модуль начальной скорости заряда (в м/с)", text: $velocity.didSet { _ in
-                        time = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).time
-                        lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
-                        height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
+                        updateData()
                     })
                         .keyboardType(.decimalPad)
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
                     TextField("Угол между вектором начальной скорости и горизонтом в градусах", text: $angle.didSet { _ in
-
+                        updateData()
                     })
                         .keyboardType(.decimalPad)
                         .padding()
