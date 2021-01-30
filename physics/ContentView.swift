@@ -8,6 +8,39 @@
 import SwiftUI
 import CoreData
 
+func deg2rad(_ number: Double) -> Double {
+    return number * .pi / 180
+}
+
+extension Binding {
+    func didSet(_ didSet: @escaping (Value) -> Void) -> Binding<Value> {
+        Binding(
+            get: { wrappedValue },
+            set: { newValue in
+                self.wrappedValue = newValue
+                didSet(newValue)
+            }
+        )
+    }
+}
+
+
+func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, lenght: Double) {
+    let g = 9.8
+    let angle = deg2rad(Double(angle))
+    let v_0y = velocity * sin(Double(angle))
+    let v_0x = velocity * cos(Double(angle))
+    
+    let t_up = v_0y / g
+    let t_full = 2 * t_up
+    
+    let height_max = v_0y * t_up - g * (pow(t_up, 2)) / 2
+    let length_max = v_0x * t_full
+    
+    
+    return (abs(t_full), height_max, length_max)
+}
+
 struct ContentView: View {
     @Environment(\.managedObjectContext) private var viewContext
 
@@ -15,22 +48,65 @@ struct ContentView: View {
         sortDescriptors: [NSSortDescriptor(keyPath: \Item.timestamp, ascending: true)],
         animation: .default)
     private var items: FetchedResults<Item>
-
+    
+    @State var velocity = ""
+    @State var angle = ""
+    
+    @State var time = Double.zero
+    @State var lenght = Double.zero
+    @State var height = Double.zero
     var body: some View {
-        List {
-            ForEach(items) { item in
-                Text("Item at \(item.timestamp!, formatter: itemFormatter)")
-            }
-            .onDelete(perform: deleteItems)
-        }
-        .toolbar {
-            #if os(iOS)
-            EditButton()
-            #endif
-
-            Button(action: addItem) {
-                Label("Add Item", systemImage: "plus")
-            }
+        NavigationView {
+            VStack {
+                VStack(alignment: .leading) {
+                    Text("Параметры снаряда").font(.title2).bold()
+                        .padding(.bottom, 6)
+                    TextField("Модуль начальной скорости заряда (в м/с)", text: $velocity.didSet { _ in
+                        time = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).time
+                        lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
+                        height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
+                    })
+                        .keyboardType(.decimalPad)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
+                    TextField("Угол между вектором начальной скорости и горизонтом в градусах", text: $angle.didSet { _ in
+                        time = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).time
+                        lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
+                        height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
+                    })
+                        .keyboardType(.decimalPad)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
+                }.padding()
+                .background(Color(UIColor.systemBackground).cornerRadius(16, antialiased: true).shadow(color: Color.black.opacity(0.1), radius: 16))
+                .padding()
+                VStack(alignment: .leading, spacing: 9) {
+                    Text("Результаты").font(.title2).bold()
+                        .padding(.bottom, 6)
+                        .onTapGesture {
+                        }
+                    HStack {
+                        Text("Время полёта")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Text(String(format: "%.2f с", self.time))
+                    }
+                    HStack {
+                        Text("Макс. высота полёта")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Text(String(format: "%.2f м", self.height))
+                    }
+                    HStack {
+                        Text("Дальность полёта")
+                            .foregroundColor(.gray)
+                        Spacer()
+                        Text(String(format: "%.2f м", self.lenght))
+                    }
+                }.padding()
+                .background(Color(UIColor.systemBackground).cornerRadius(16, antialiased: true).shadow(color: Color.black.opacity(0.1), radius: 16))
+                .padding()
+            }.navigationTitle("Physics")
         }
     }
 
