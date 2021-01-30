@@ -25,6 +25,11 @@ extension Binding {
 }
 
 func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Double) -> (time: Double, height: Double, lenght: Double) {
+    
+    guard m != 0 && k != 0 else {
+        return (0, 0, 0)
+    }
+    
     let g = 9.8
     let angle = deg2rad(Double(angle))
     let v_0y = velocity * sin(Double(angle))
@@ -49,9 +54,12 @@ func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Do
         y_list.append(y)
     }
     
-    let t_full = t_list[-1]
+    guard (t_list.last != nil) && (x_list.last != nil) else {
+        return (0, 0, 0)
+    }
+    let t_full = t_list.last ?? 0
     let height_max = y_list.max()!
-    let length_max = x_list[-1]
+    let length_max = x_list.last ?? 0
     
     return (abs(t_full), height_max, length_max)
 }
@@ -90,8 +98,8 @@ struct ContentView: View {
     
     @State var air_resist = false
     
-    @State var k = Double.zero
-    @State var m = Double.zero
+    @State var k = ""
+    @State var m = ""
     
     func updateData() {
         if !air_resist {
@@ -99,9 +107,9 @@ struct ContentView: View {
             lenght = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).lenght
             height = get_time(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0).height
         } else {
-            time = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).time
-            lenght = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).lenght
-            height = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: m, k: k).height
+            time = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: Double(m) ?? 0, k: Double(k) ?? 0).time
+            lenght = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: Double(m) ?? 0, k: Double(k) ?? 0).lenght
+            height = get_time_with_air_resistance(angle: Int(angle) ?? 0, velocity: Double(velocity) ?? 0, m: Double(m) ?? 0, k: Double(k) ?? 0).height
         }
     }
     var body: some View {
@@ -117,6 +125,21 @@ struct ContentView: View {
                         .padding()
                         .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
                     TextField("Угол между вектором начальной скорости и горизонтом в градусах", text: $angle.didSet { _ in
+                        updateData()
+                    })
+                        .keyboardType(.decimalPad)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
+                    Toggle(isOn: $air_resist.didSet { _ in
+                        updateData()
+                    }, label: {Text("Учитывать сопротивление воздуха?")}).padding(.vertical, 5)
+                    TextField("Коэффициент k", text: $k.didSet { _ in
+                        updateData()
+                    })
+                        .keyboardType(.decimalPad)
+                        .padding()
+                        .background(RoundedRectangle(cornerRadius: 5).fill(Color.gray.opacity(0.08)))
+                    TextField("Масса снаряда (в кг)", text: $m.didSet { _ in
                         updateData()
                     })
                         .keyboardType(.decimalPad)
