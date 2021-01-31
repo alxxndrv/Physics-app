@@ -7,6 +7,7 @@
 
 import SwiftUI
 import CoreData
+import SwiftUICharts
 
 func deg2rad(_ number: Double) -> Double {
     return number * .pi / 180
@@ -24,10 +25,10 @@ extension Binding {
     }
 }
 
-func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Double) -> (time: Double, height: Double, lenght: Double) {
+func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Double) -> (time: Double, height: Double, lenght: Double, y_list: [Double]) {
     
     guard m != 0 && k != 0 else {
-        return (0, 0, 0)
+        return (0, 0, 0, [])
     }
     
     let g = 9.8
@@ -55,13 +56,13 @@ func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Do
     }
     
     guard (t_list.last != nil) && (x_list.last != nil) else {
-        return (0, 0, 0)
+        return (0, 0, 0, [])
     }
     let t_full = t_list.last ?? 0
     let height_max = y_list.max()!
     let length_max = x_list.last ?? 0
     
-    return (abs(t_full), height_max, length_max)
+    return (abs(t_full), height_max, length_max, y_list)
 }
 
 
@@ -76,7 +77,6 @@ func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, le
     
     let height_max = v_0y * t_up - g * (pow(t_up, 2)) / 2
     let length_max = v_0x * t_full
-    
     
     return (abs(t_full), height_max, length_max)
 }
@@ -100,6 +100,10 @@ struct ContentView: View {
     
     @State var k = ""
     @State var m = ""
+    
+    @State var flightGraphData = [Double]()
+    
+    @State var graphShown = false
     
     func updateData() {
         if !air_resist {
@@ -183,11 +187,24 @@ struct ContentView: View {
                         Spacer()
                         Text(String(format: "%.2f м", self.lenght))
                     }
+                    HStack{
+                    if air_resist {
+                        Button(action: {
+                            graphShown.toggle()
+                        }, label: {
+                            Text("График полёта")
+                        })
+                    }
+                    }
+                    
                 }.padding()
                 .background(Color(UIColor.systemBackground).cornerRadius(16, antialiased: true).shadow(color: Color.black.opacity(0.1), radius: 16))
                 .padding()
                 Spacer()
             }.navigationTitle("Physics")
+            .sheet(isPresented: $graphShown, content: {
+                ChartView(angle: Int(angle)!, velocity: Double(velocity)!, m: Double(m)!, k: Double(k)!)
+            })
     }
 
     private func addItem() {

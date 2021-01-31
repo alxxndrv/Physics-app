@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -13,6 +13,8 @@
 		042909F525B21C37002D03D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 042909F425B21C37002D03D1 /* Preview Assets.xcassets */; };
 		042909F725B21C37002D03D1 /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042909F625B21C37002D03D1 /* Persistence.swift */; };
 		042909FA25B21C37002D03D1 /* physics.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 042909F825B21C37002D03D1 /* physics.xcdatamodeld */; };
+		04D0DE9025C6DEEB002A0359 /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 04D0DE8F25C6DEEB002A0359 /* SwiftUICharts */; };
+		04D0DE9325C6DF4C002A0359 /* ChartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04D0DE9225C6DF4C002A0359 /* ChartView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,7 @@
 		042909F625B21C37002D03D1 /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		042909F925B21C37002D03D1 /* physics.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = physics.xcdatamodel; sourceTree = "<group>"; };
 		042909FB25B21C38002D03D1 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		04D0DE9225C6DF4C002A0359 /* ChartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D0DE9025C6DEEB002A0359 /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,6 +62,7 @@
 			children = (
 				042909ED25B21C35002D03D1 /* physicsApp.swift */,
 				042909EF25B21C35002D03D1 /* ContentView.swift */,
+				04D0DE9225C6DF4C002A0359 /* ChartView.swift */,
 				042909F125B21C37002D03D1 /* Assets.xcassets */,
 				042909F625B21C37002D03D1 /* Persistence.swift */,
 				042909FB25B21C38002D03D1 /* Info.plist */,
@@ -91,6 +96,9 @@
 			dependencies = (
 			);
 			name = physics;
+			packageProductDependencies = (
+				04D0DE8F25C6DEEB002A0359 /* SwiftUICharts */,
+			);
 			productName = physics;
 			productReference = 042909EA25B21C35002D03D1 /* physics.app */;
 			productType = "com.apple.product-type.application";
@@ -118,6 +126,9 @@
 				Base,
 			);
 			mainGroup = 042909E125B21C35002D03D1;
+			packageReferences = (
+				04D0DE8E25C6DEEA002A0359 /* XCRemoteSwiftPackageReference "ChartView" */,
+			);
 			productRefGroup = 042909EB25B21C35002D03D1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -147,6 +158,7 @@
 				042909F725B21C37002D03D1 /* Persistence.swift in Sources */,
 				042909F025B21C35002D03D1 /* ContentView.swift in Sources */,
 				042909EE25B21C35002D03D1 /* physicsApp.swift in Sources */,
+				04D0DE9325C6DF4C002A0359 /* ChartView.swift in Sources */,
 				042909FA25B21C37002D03D1 /* physics.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		04D0DE8E25C6DEEA002A0359 /* XCRemoteSwiftPackageReference "ChartView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/AppPear/ChartView";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		04D0DE8F25C6DEEB002A0359 /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 04D0DE8E25C6DEEA002A0359 /* XCRemoteSwiftPackageReference "ChartView" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		042909F825B21C37002D03D1 /* physics.xcdatamodeld */ = {
