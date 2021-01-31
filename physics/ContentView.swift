@@ -66,7 +66,7 @@ func get_time_with_air_resistance(angle: Int, velocity: Double, m: Double, k: Do
 }
 
 
-func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, lenght: Double) {
+func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, lenght: Double, y_list: [Double]) {
     let g = 9.8
     let angle = deg2rad(Double(angle))
     let v_0y = velocity * sin(Double(angle))
@@ -78,7 +78,27 @@ func get_time(angle: Int, velocity: Double) -> (time: Double, height: Double, le
     let height_max = v_0y * t_up - g * (pow(t_up, 2)) / 2
     let length_max = v_0x * t_full
     
-    return (abs(t_full), height_max, length_max)
+    
+    var t: Double = 0
+    var t_list = [Double]()
+    while t <= t_full {
+        t_list.append(t)
+        t += 0.001
+    }
+
+//    var x_list = [Double]()
+//    for t in t_list {
+//        let x = v_0x * t
+//        x_list.append(x)
+//    }
+    
+    var y_list = [Double]()
+    for t in t_list {
+        let y = v_0y * t - g * (pow(t, 2)) / 2
+        y_list.append(y)
+    }
+    
+    return (abs(t_full), height_max, length_max, y_list)
 }
 
 struct ContentView: View {
@@ -188,13 +208,11 @@ struct ContentView: View {
                         Text(String(format: "%.2f м", self.lenght))
                     }
                     HStack{
-                    if air_resist {
                         Button(action: {
                             graphShown.toggle()
                         }, label: {
                             Text("График полёта")
                         })
-                    }
                     }
                     
                 }.padding()
@@ -203,7 +221,7 @@ struct ContentView: View {
                 Spacer()
             }.navigationTitle("Physics")
             .sheet(isPresented: $graphShown, content: {
-                ChartView(angle: Int(angle)!, velocity: Double(velocity)!, m: Double(m)!, k: Double(k)!)
+                ChartView(angle: Int(angle)!, velocity: Double(velocity)!, m: Double(m) ?? 0, k: Double(k) ?? 0, air_resist: air_resist)
             })
     }
 
